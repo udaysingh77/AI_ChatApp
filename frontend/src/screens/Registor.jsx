@@ -13,7 +13,7 @@ const Registor = () => {
         }).then((res)=>{
             console.log(res.data);
             navigate('/')
-        }).catch((err)=>{console.log(err.response.data)})
+        }).catch((err)=>{console.log(err)})
     }
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900">

@@ -20,7 +20,7 @@ const Login = () => {
             localStorage.setItem('token',res.data.token)
             setUser(res.data.user)
             navigate('/')
-        }).catch((err)=>{console.log(err.response.dat)})
+        }).catch((err)=>{console.log(err.response.data)})
     }
 
     
