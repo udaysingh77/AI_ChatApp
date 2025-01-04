@@ -31,3 +31,36 @@ export const createProject = async (req, res) => {
         return res.status(500).json({ message: error.message });
     }
 };
+
+export const getAllProjects = async(req,res)=>{
+    try {
+        const loggedInUser = await UserModel.findOne({email:req.user.email})
+        const allProjectsByUserId = await projectService.getAllProjectsByUserId(loggedInUser._id)
+        res.json(allProjectsByUserId)
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const addUserToProject = async(req,res)=>{
+    try {
+        
+        const {projectId, users} = req.body
+
+        const loggedInUser = await UserModel.findOne({
+            email:req.user.email
+        })
+
+        const project = await projectService.addUserToProject({
+            projectId,
+            users,
+            userId:loggedInUser._id
+        })
+
+        return res.json({
+            project
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
