@@ -9,11 +9,13 @@ router.post("/newProject",authMiddleWare.authUser,body('name').isString().withMe
 
 router.get("/all",authMiddleWare.authUser,projectControllers.getAllProjects)
 
+
 router.put("/add-user",
     authMiddleWare.authUser,
     body('projectId').isString().withMessage('Project ID is required'),
-    body('user').isArray({min:1}).withMessage('User must be an array of strings').bail().custom((users)=>users.every(user => typeof user === 'string').withMessage('Each User must be a string'),
-    projectControllers.addUserToProject))
+    body('users').isArray({min:1}).withMessage('User must be an array of strings').bail().custom((users)=>users.every(user => typeof user === 'string')).withMessage('Each User must be a string'),
+    projectControllers.addUserToProject)
+
 
 
 

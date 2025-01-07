@@ -20,4 +20,9 @@ const createUser = async({
     return user;
 } 
 
-export {createUser}
+
+const getAllUsers = async({userId})=>{
+    return await userModel.find({_id:{$ne:userId}})
+}
+
+export {createUser, getAllUsers}

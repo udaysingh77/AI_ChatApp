@@ -74,3 +74,19 @@ try {
     res.status(400).send(error.message)
 }
 }
+
+
+export const getAllUsersController = async(req,res)=>{
+    try {
+        console.log("Hello give me hit here");
+        const loggedInUser = await userModel.findOne({
+            email:req.user.email
+        })
+        
+        const allUsers = await userService.getAllUsers({userId:loggedInUser._id})
+        res.json(allUsers)
+    } catch (error) {
+        console.log(error);
+        res.json(error.message)
+    }
+}
