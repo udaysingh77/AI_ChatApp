@@ -64,3 +64,20 @@ export const addUserToProject = async(req,res)=>{
         console.log(error);
     }
 }
+
+
+export const getProjectById = async(req,res) =>{
+    const {projectId} = req.params;
+    try {
+        
+        const project = await projectService.getProjectById({projectId})
+
+        return res.status(200).json({
+            project
+        })
+
+    } catch (error) {
+        console.log(error);
+        res.json({error:error.message})
+    }
+}

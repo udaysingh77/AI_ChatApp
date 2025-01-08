@@ -1,4 +1,4 @@
-import {useContext, useState} from 'react'
+import {useContext, useEffect, useState} from 'react'
 import {UserContext} from '../context/user.context.jsx'
 import axios from '../config/axios.js'
 
@@ -8,6 +8,7 @@ const Home = () => {
   
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [projectName, setProjectName] = useState(null)
+  const [project, setProject] = useState([])
 
   function createProject(e){
     e.preventDefault()
@@ -17,16 +18,38 @@ const Home = () => {
     }).then((res)=>{console.log(res.data)
       setIsModalOpen(false)
     }).catch((e)=>console.log(e))
-
   }
+
+  useEffect(()=>{
+    axios.get('/project/all').then((res)=>{
+      console.log(res.data);
+      setProject(res.data)
+      console.log("=====>Project",project);
+    }).catch(err=>{
+      console.log(err);
+    })
+  },[])
 
   return (
     <main>
-      <div className="projects m-4">
+      <div className="projects m-4 flex flex-wrap gap-3">
         <button onClick={()=>setIsModalOpen(true)}  className="project p-4 border border-slate-300 rounded-md">
           New Project
-        <i className="ri-link ml-2"></i>
         </button>
+        <div className=' bg-gray-500'>
+        {
+          project.map((project)=>{
+            <div className='project flex flex-col gap-2 cursor-pointer p-4'>
+              <h2 className=' font-semibold '>
+              {project.name}
+              </h2>
+              <div className='flex gap-2'>
+                {project.users.length}
+              </div>
+            </div>
+          })
+        }
+        </div>
       </div>
 
       
