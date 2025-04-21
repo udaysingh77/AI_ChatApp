@@ -1,11 +1,12 @@
 import {useContext, useEffect, useState} from 'react'
 import {UserContext} from '../context/user.context.jsx'
 import axios from '../config/axios.js'
+import {useNavigate} from 'react-router-dom'
 
 
 const Home = () => {
   const {user} = useContext(UserContext)
-  
+  const navigate = useNavigate()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [projectName, setProjectName] = useState(null)
   const [project, setProject] = useState([])
@@ -35,21 +36,22 @@ const Home = () => {
       <div className="projects m-4 flex flex-wrap gap-3">
         <button onClick={()=>setIsModalOpen(true)}  className="project p-4 border border-slate-300 rounded-md">
           New Project
+          <i className='ri-link ml-2'></i>
         </button>
-        <div className=' bg-gray-500'>
         {
-          project.map((project)=>{
-            <div className='project flex flex-col gap-2 cursor-pointer p-4'>
+          project.map((project)=>(
+            <div key={project._id} onClick={()=>{navigate(`/project`,{state:{project}})}} className='project flex border border-slate-300 rounded flex-col gap-2 cursor-pointer p-4 min-w-52 hover:bg-slate-200'>
               <h2 className=' font-semibold '>
               {project.name}
               </h2>
               <div className='flex gap-2'>
+                <p><i className="ri-user-line"></i>Collaborators :</p>
                 {project.users.length}
               </div>
+              
             </div>
-          })
+          ))
         }
-        </div>
       </div>
 
       
