@@ -48,7 +48,7 @@ const Project = () => {
 
     const [ runProcess, setRunProcess ] = useState(null)
 
-    console.log("user=======>", users)
+
 
     const handleUserClick = (id) => {
         setSelectedUserId(prevSelectedUserId => {
@@ -59,7 +59,7 @@ const Project = () => {
                 newSelectedUserId.add(id);
             }
 
-            console.log("newSelectedUserId  ======>",newSelectedUserId);
+     
 
             return newSelectedUserId;
         });
@@ -73,7 +73,7 @@ const Project = () => {
             projectId: location.state.project._id,
             users: Array.from(selectedUserId)
         }).then(res => {
-            console.log(res.data)
+          
             setIsModalOpen(false)
 
         }).catch(err => {
@@ -151,22 +151,26 @@ const Project = () => {
         // })
 
 
-        // axios.get(`/projects/get-project/${location.state.project._id}`).then(res => {
+        axios.get(`/project/get-project/${location.state.project._id}`).then(res => {
 
-        //     console.log(res.data.project)
+            console.log("projectsAIDDDDDDDDS",res.data.project)
 
-        //     setProject(res.data.project)
-        //     setFileTree(res.data.project.fileTree || {})
-        // })
+            setProject(res.data.project)
+            setFileTree(res.data.project.fileTree || {})
+        })
 
 
-        axios.get("users/all").then((res)=>{
+        axios.get("/users/all").then((res)=>{
 
-            console.log("user=======>",res.data.users)
-            setUsers(res.data.users)
+        
+            setUsers(res.data)
         }).catch((err)=>{
             console.log(err);
         })
+
+
+
+
         // axios.get('/users/all').then(res => {
 
         //     setUsers(res.data.users)
@@ -186,9 +190,9 @@ const Project = () => {
             projectId: project._id,
             fileTree: ft
         }).then(res => {
-            console.log(res.data)
+            // console.log(res.data)
         }).catch(err => {
-            console.log(err)
+            // console.log(err)
         })
     }
 
@@ -419,7 +423,7 @@ const Project = () => {
                         </header>
                         <div className="users-list flex flex-col gap-2 mb-16 max-h-96 overflow-auto">
                             {users.map(user => (
-                                console.log("user=======>",user),
+                            
                                 <div key={user.id} className={`user cursor-pointer hover:bg-slate-200 ${Array.from(selectedUserId).indexOf(user._id) != -1 ? 'bg-slate-200' : ""} p-2 flex gap-2 items-center`} onClick={() => handleUserClick(user._id)}>
                                     <div className='aspect-square relative rounded-full w-fit h-fit flex items-center justify-center p-5 text-white bg-slate-600'>
                                         <i className="ri-user-fill absolute"></i>
