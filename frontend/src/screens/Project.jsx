@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from 'react'
 import { UserContext } from '../context/user.context'
 import { useNavigate, useLocation } from 'react-router-dom'
 import axios from '../config/axios'
+import {initializeSocket,sendMessage,receiveMessage} from "../config/socket"
 // import { initializeSocket, receiveMessage, sendMessage } from '../config/socket'
 // import Markdown from 'markdown-to-jsx'
 // import hljs from 'highlight.js';
@@ -116,7 +117,11 @@ const Project = () => {
 
     useEffect(() => {
 
-        // initializeSocket(project._id)
+        initializeSocket(project._id)
+
+        receiveMessage('project-message',data=>{
+            console.log(data)
+        })
 
         if (!webContainer) {
             // getWebContainer().then(container => {
@@ -152,9 +157,6 @@ const Project = () => {
 
 
         axios.get(`/project/get-project/${location.state.project._id}`).then(res => {
-
-            console.log("projectsAIDDDDDDDDS",res.data.project)
-
             setProject(res.data.project)
             setFileTree(res.data.project.fileTree || {})
         })
@@ -181,7 +183,6 @@ const Project = () => {
 
         // })
 
-        ;
 
     }, [])
 

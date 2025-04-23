@@ -51,7 +51,7 @@ const Registor = () => {
             </button>
         </form>
         <p className="text-gray-400 mt-4">
-            Registered User? <Link to="/login" className="text-blue-500 hover:underline">Create one</Link>
+            Registered User? <Link to="/login" className="text-blue-500 hover:underline">Login now</Link>
         </p>
     </div>
 </div>

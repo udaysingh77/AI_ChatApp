@@ -19,7 +19,7 @@ app.use('/users',userRoutes);
 app.use('/project',projectRoutes);
 
 app.get("/",(req,res)=>{
-    res.json("Hello World travel, girls slayer, Millionear - Uday Singh🤑😎😋")
+    res.json("🤑😎😋")
 })
 
 export default app;
