@@ -45,13 +45,16 @@ io.use(async(socket,next)=>{
 
 io.on('connection', socket => {
     console.log("socket Connected")
-    socket.join(socket.project._id)
+
+    socket.roomId = socket.project._id.toString();
+
+    socket.join(socket.roomId)
 
     
 
     socket.on('project-message',data=>{
       console.log(data)
-      socket.broadcast.to(socket.project._id).emit('project',data)
+      socket.broadcast.to(socket.roomId).emit('project',data)
     })
 
   socket.on('event', data => console.log("socket Connected"));

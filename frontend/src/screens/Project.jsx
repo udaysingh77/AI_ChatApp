@@ -89,7 +89,7 @@ const Project = () => {
 
         sendMessage('project-message', {
             message,
-            sender: user
+            sender: user.id
         })
         setMessages(prevMessages => [ ...prevMessages, { sender: user, message } ]) // Update messages state
         setMessage("")
