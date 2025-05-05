@@ -50,11 +50,11 @@ io.on('connection', socket => {
 
     socket.join(socket.roomId)
     //here
-    console.log("THIS hiittttttts 2");
+    // console.log("THIS hiittttttts 2");
 
     socket.on('project-message',data=>{
-      console.log("THIS hiittttttts 3");
-      console.log("data====>",data)
+      // console.log("THIS hiittttttts 3");
+      // console.log("data====>",data)
       socket.broadcast.to(socket.roomId).emit('project',data)
     })
 
