@@ -89,7 +89,7 @@ const Project = () => {
 
         sendMessage('project-message', {
             message,
-            sender: user.id
+            sender: user
         })
         setMessages(prevMessages => [ ...prevMessages, { sender: user, message } ]) // Update messages state
         setMessage("")
@@ -119,6 +119,8 @@ const Project = () => {
 
         initializeSocket(project._id)
 
+        console.log("object====>",user);
+
         receiveMessage('project-message',data=>{
             console.log(data)
         })
@@ -131,9 +133,9 @@ const Project = () => {
         }
 
 
-        // receiveMessage('project-message', data => {
+        receiveMessage('project-message', data => {
 
-        //     console.log(data)
+            console.log(data)
             
         //     if (data.sender._id == 'ai') {
 
@@ -153,7 +155,7 @@ const Project = () => {
 
         //         setMessages(prevMessages => [ ...prevMessages, data ]) // Update messages state
         //     }
-        // })
+        })
 
 
         axios.get(`/project/get-project/${location.state.project._id}`).then(res => {
