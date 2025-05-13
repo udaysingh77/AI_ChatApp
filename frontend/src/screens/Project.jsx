@@ -233,10 +233,10 @@ const Project = () => {
                             <div 
                                 key={index} 
                                 className={`${msg.sender._id === 'ai' ? 'max-w-80' : 'max-w-52'} 
-                                           ${msg.sender?._id === user?._id?.toString() && 'ml-auto'}  
+                                           ${msg.sender?._id === user?._id?.toString() && 'ml-0'}  
                                            message flex flex-col p-2 bg-slate-50 w-fit rounded-md`}>
                                 <small className='opacity-65 text-xs'>{msg.sender?.email}</small>
-                                <div className='text-sm'>
+                                <div className='text-sm ml-auto'>
                                     {msg.sender?._id === 'ai' ?
                                         WriteAiMessage(msg.message)
                                         : <p>{msg.message}</p>}

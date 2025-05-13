@@ -49,12 +49,19 @@ io.on('connection', socket => {
     socket.roomId = socket.project._id.toString();
 
     socket.join(socket.roomId)
-    //here
-    // console.log("THIS hiittttttts 2");
 
     socket.on('project-message',data=>{
-      console.log("THIS hiittttttts 3");
-      console.log("data====>",data)
+      const message = data.message.trim()
+      const isAIPresentInMessage = message.incluses("ai")
+
+      if(isAIPresentInMessage){
+        socket.emit("project-message",{
+          sender:data.sender,
+          message:"Ai is present in the message",
+        })
+
+        return
+      }
       socket.broadcast.to(socket.roomId).emit('project-message',data)
     })
 
