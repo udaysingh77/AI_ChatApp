@@ -55,7 +55,7 @@ io.on('connection', socket => {
     socket.on('project-message',data=>{
       console.log("THIS hiittttttts 3");
       console.log("data====>",data)
-      socket.broadcast.to(socket.roomId).emit('project',data)
+      socket.broadcast.to(socket.roomId).emit('project-message',data)
     })
 
   socket.on('event', data => console.log("socket Connected"));

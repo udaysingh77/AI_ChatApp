@@ -86,15 +86,21 @@ const Project = () => {
     }
 
     const send = () => {
-
-        sendMessage('project-message', {
-            message,
-            sender: user
-        })
-        setMessages(prevMessages => [ ...prevMessages, { sender: user, message } ]) // Update messages state
-        setMessage("")
-
-    }
+        if (!message.trim()) return; // Don't send empty messages
+        console.log("user====>",user);
+    
+        const newMessage = {
+            message: message,
+            sender: {
+                _id: user?._id,
+                email: user?.email
+            }
+        };
+    
+        sendMessage('project-message', newMessage);
+        setMessages(prevMessages => [...prevMessages, newMessage]);
+        setMessage("");
+    };
 
     function WriteAiMessage(message) {
 
@@ -121,21 +127,9 @@ const Project = () => {
 
         console.log("object====>",user);
 
-        receiveMessage('project-message',data=>{
-            console.log(data)
-        })
-
-        if (!webContainer) {
-            // getWebContainer().then(container => {
-            //     setWebContainer(container)
-            //     console.log("container started")
-            // })
-        }
-
-
         receiveMessage('project-message', data => {
 
-            console.log(data)
+        console.log("============>",data)
             
         //     if (data.sender._id == 'ai') {
 
@@ -153,9 +147,21 @@ const Project = () => {
         //     } else {
 
 
-        //         setMessages(prevMessages => [ ...prevMessages, data ]) // Update messages state
-        //     }
+                setMessages(prevMessages => [ ...prevMessages, data ]) // Update messages state
+            // }
         })
+
+
+
+        if (!webContainer) {
+            // getWebContainer().then(container => {
+            //     setWebContainer(container)
+            //     console.log("container started")
+            // })
+        }
+
+
+
 
 
         axios.get(`/project/get-project/${location.state.project._id}`).then(res => {
@@ -224,10 +230,14 @@ const Project = () => {
                         ref={messageBox}
                         className="message-box p-1 flex-grow flex flex-col gap-1 overflow-auto max-h-full scrollbar-hide">
                         {messages.map((msg, index) => (
-                            <div key={index} className={`${msg.sender._id === 'ai' ? 'max-w-80' : 'max-w-52'} ${msg.sender._id == user._id.toString() && 'ml-auto'}  message flex flex-col p-2 bg-slate-50 w-fit rounded-md`}>
-                                <small className='opacity-65 text-xs'>{msg.sender.email}</small>
+                            <div 
+                                key={index} 
+                                className={`${msg.sender._id === 'ai' ? 'max-w-80' : 'max-w-52'} 
+                                           ${msg.sender?._id === user?._id?.toString() && 'ml-auto'}  
+                                           message flex flex-col p-2 bg-slate-50 w-fit rounded-md`}>
+                                <small className='opacity-65 text-xs'>{msg.sender?.email}</small>
                                 <div className='text-sm'>
-                                    {msg.sender._id === 'ai' ?
+                                    {msg.sender?._id === 'ai' ?
                                         WriteAiMessage(msg.message)
                                         : <p>{msg.message}</p>}
                                 </div>
