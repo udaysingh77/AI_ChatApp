@@ -4,7 +4,8 @@ import app from "./app.js"
 import { Server } from "socket.io";
 import jwt from "jsonwebtoken"
 import mongoose from "mongoose";
-import Project from "./models/project.model.js";
+import Project from "./models/project.model.js"
+import { getAIGeneratedContent } from "./services/ai.service.js";
 
 
 
@@ -50,16 +51,21 @@ io.on('connection', socket => {
 
     socket.join(socket.roomId)
 
-    socket.on('project-message',data=>{
+    socket.on('project-message',async data=>{
       const message = data.message.trim()
-      const isAIPresentInMessage = message.incluses("ai")
+      const isAIPresentInMessage = message.includes("ai")
 
       if(isAIPresentInMessage){
-        socket.emit("project-message",{
-          sender:data.sender,
-          message:"Ai is present in the message",
-        })
+        const prompt = message.split("ai")[1].trim();
+        const result = await getAIGeneratedContent(prompt)
 
+        io.to(socket.roomId).emit('project-message',{
+          message: result,
+          sender:{
+            _id:"ai",
+            email:"AI"
+          }
+        })
         return
       }
       socket.broadcast.to(socket.roomId).emit('project-message',data)

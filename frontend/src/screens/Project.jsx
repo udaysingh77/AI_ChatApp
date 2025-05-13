@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from 'react'
 import { UserContext } from '../context/user.context'
 import { useNavigate, useLocation } from 'react-router-dom'
 import axios from '../config/axios'
+import Markdown from 'markdown-to-jsx'
 import {initializeSocket,sendMessage,receiveMessage} from "../config/socket"
 // import { initializeSocket, receiveMessage, sendMessage } from '../config/socket'
 // import Markdown from 'markdown-to-jsx'
@@ -110,14 +111,14 @@ const Project = () => {
             <div
                 className='overflow-auto bg-slate-950 text-white rounded-sm p-2'
             >
-                {/* <Markdown
+                <Markdown
                     children={messageObject.text}
                     options={{
                         overrides: {
                             code: SyntaxHighlightedCode,
                         },
                     }}
-                /> */}
+                />
             </div>)
     }
 
@@ -230,6 +231,8 @@ const Project = () => {
                         ref={messageBox}
                         className="message-box p-1 flex-grow flex flex-col gap-1 overflow-auto max-h-full scrollbar-hide">
                         {messages.map((msg, index) => (
+                            console.log("msg==========>",msg),
+                            console.log("user==========>",msg),
                             <div 
                                 key={index} 
                                 className={`${msg.sender._id === 'ai' ? 'max-w-80' : 'max-w-52'} 
