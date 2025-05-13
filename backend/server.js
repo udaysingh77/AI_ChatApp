@@ -50,7 +50,7 @@ io.on('connection', socket => {
 
     socket.join(socket.roomId)
     //here
-    console.log("THIS hiittttttts 2");
+    // console.log("THIS hiittttttts 2");
 
     socket.on('project-message',data=>{
       console.log("THIS hiittttttts 3");
