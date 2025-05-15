@@ -1,29 +1,25 @@
 import React, { useState, useEffect, useContext, useRef } from 'react'
 import { UserContext } from '../context/user.context'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import axios from '../config/axios'
 import Markdown from 'markdown-to-jsx'
 import {initializeSocket,sendMessage,receiveMessage} from "../config/socket"
-// import { initializeSocket, receiveMessage, sendMessage } from '../config/socket'
-// import Markdown from 'markdown-to-jsx'
-// import hljs from 'highlight.js';
-// import { getWebContainer } from '../config/webcontainer'
 
 
-function SyntaxHighlightedCode(props) {
-    const ref = useRef(null)
+// function SyntaxHighlightedCode(props) {
+//     const ref = useRef(null)
 
-    // React.useEffect(() => {
-    //     if (ref.current && props.className?.includes('lang-') && window.hljs) {
-    //         window.hljs.highlightElement(ref.current)
+//     React.useEffect(() => {
+//         if (ref.current && props.className?.includes('lang-') && window.hljs) {
+//             window.hljs.highlightElement(ref.current)
 
-    //         // hljs won't reprocess the element unless this attribute is removed
-    //         ref.current.removeAttribute('data-highlighted')
-    //     }
-    // }, [ props.className, props.children ])
+//             // hljs won't reprocess the element unless this attribute is removed
+//             ref.current.removeAttribute('data-highlighted')
+//         }
+//     }, [ props.className, props.children ])
 
-    return <code {...props} ref={ref} />
-}
+//     return <code {...props} ref={ref} />
+// }
 
 
 const Project = () => {
@@ -44,11 +40,6 @@ const Project = () => {
 
     const [ currentFile, setCurrentFile ] = useState(null)
     const [ openFiles, setOpenFiles ] = useState([])
-
-    const [ webContainer, setWebContainer ] = useState(null)
-    const [ iframeUrl, setIframeUrl ] = useState(null)
-
-    const [ runProcess, setRunProcess ] = useState(null)
 
 
 
@@ -74,7 +65,7 @@ const Project = () => {
         axios.put("/project/add-user", {
             projectId: location.state.project._id,
             users: Array.from(selectedUserId)
-        }).then(res => {
+        }).then(() => {
           
             setIsModalOpen(false)
 
@@ -103,24 +94,26 @@ const Project = () => {
         setMessage("");
     };
 
-    function WriteAiMessage(message) {
+    // function WriteAiMessage(message) {
 
-        const messageObject = JSON.parse(message)
+    //     console.log("message====>", typeof message);
 
-        return (
-            <div
-                className='overflow-auto bg-slate-950 text-white rounded-sm p-2'
-            >
-                <Markdown
-                    children={messageObject.text}
-                    options={{
-                        overrides: {
-                            code: SyntaxHighlightedCode,
-                        },
-                    }}
-                />
-            </div>)
-    }
+    //     const messageObject = JSON.parse(message)
+
+    //     return (
+    //         <div
+    //             className='overflow-auto bg-slate-950 text-white rounded-sm p-2'
+    //         >
+    //             <Markdown
+    //                 children={messageObject}
+    //                 options={{
+    //                     overrides: {
+    //                         code: SyntaxHighlightedCode,
+    //                     },
+    //                 }}
+    //             />
+    //         </div>)
+    // }
 
     useEffect(() => {
 
@@ -131,87 +124,27 @@ const Project = () => {
         receiveMessage('project-message', data => {
 
         console.log("============>",data)
-            
-        //     if (data.sender._id == 'ai') {
-
-
-        //         const message = JSON.parse(data.message)
-
-        //         console.log(message)
-
-        //         webContainer?.mount(message.fileTree)
-
-        //         if (message.fileTree) {
-        //             setFileTree(message.fileTree || {})
-        //         }
-        //         setMessages(prevMessages => [ ...prevMessages, data ]) // Update messages state
-        //     } else {
-
-
                 setMessages(prevMessages => [ ...prevMessages, data ]) // Update messages state
-            // }
         })
-
-
-
-        if (!webContainer) {
-            // getWebContainer().then(container => {
-            //     setWebContainer(container)
-            //     console.log("container started")
-            // })
-        }
-
-
-
-
 
         axios.get(`/project/get-project/${location.state.project._id}`).then(res => {
             setProject(res.data.project)
             setFileTree(res.data.project.fileTree || {})
         })
 
-
         axios.get("/users/all").then((res)=>{
-
         
             setUsers(res.data)
         }).catch((err)=>{
             console.log(err);
         })
 
-
-
-
-        // axios.get('/users/all').then(res => {
-
-        //     setUsers(res.data.users)
-
-        // }).catch(err => {
-
-        //     console.log(err)
-
-        // })
-
-
     }, [])
 
-    function saveFileTree(ft) {
-        axios.put('/projects/update-file-tree', {
-            projectId: project._id,
-            fileTree: ft
-        }).then(res => {
-            // console.log(res.data)
-        }).catch(err => {
-            // console.log(err)
-        })
-    }
 
 
     // Removed appendIncomingMessage and appendOutgoingMessage functions
 
-    function scrollToBottom() {
-        messageBox.current.scrollTop = messageBox.current.scrollHeight
-    }
 
     return (
         <main className='h-screen w-screen flex'>
@@ -235,14 +168,17 @@ const Project = () => {
                             console.log("user==========>",msg),
                             <div 
                                 key={index} 
-                                className={`${msg.sender._id === 'ai' ? 'max-w-80' : 'max-w-52'} 
+                                className={`${msg.sender._id === 'ai' ? '' : 'ml-auto'} 
                                            ${msg.sender?._id === user?._id?.toString() && 'ml-0'}  
                                            message flex flex-col p-2 bg-slate-50 w-fit rounded-md`}>
                                 <small className='opacity-65 text-xs'>{msg.sender?.email}</small>
-                                <div className='text-sm ml-auto'>
+                                <div className='text-sm ml-auto overflow-auto'>
                                     {msg.sender?._id === 'ai' ?
-                                        WriteAiMessage(msg.message)
+                                    <div className='overflow-auto bg-slate-950 text-white rounded-sm p-2'>
+                                        <Markdown>{(msg.message)}</Markdown>
+                                    </div>
                                         : <p>{msg.message}</p>}
+                                        {/* <p>{msg.message}</p> */}
                                 </div>
                             </div>
                         ))}
@@ -275,7 +211,7 @@ const Project = () => {
 
 
                             return (
-                                <div className="user cursor-pointer hover:bg-slate-200 p-2 flex gap-2 items-center">
+                                <div key={user} className="user cursor-pointer hover:bg-slate-200 p-2 flex gap-2 items-center">
                                     <div className='aspect-square rounded-full w-fit h-fit flex items-center justify-center p-5 text-white bg-slate-600'>
                                         <i className="ri-user-fill absolute"></i>
                                     </div>
@@ -331,101 +267,8 @@ const Project = () => {
                                 ))
                             }
                         </div>
-
-                        <div className="actions flex gap-2">
-                            <button
-                                onClick={async () => {
-                                    await webContainer.mount(fileTree)
-
-
-                                    const installProcess = await webContainer.spawn("npm", [ "install" ])
-
-
-
-                                    installProcess.output.pipeTo(new WritableStream({
-                                        write(chunk) {
-                                            console.log(chunk)
-                                        }
-                                    }))
-
-                                    if (runProcess) {
-                                        runProcess.kill()
-                                    }
-
-                                    let tempRunProcess = await webContainer.spawn("npm", [ "start" ]);
-
-                                    tempRunProcess.output.pipeTo(new WritableStream({
-                                        write(chunk) {
-                                            console.log(chunk)
-                                        }
-                                    }))
-
-                                    setRunProcess(tempRunProcess)
-
-                                    webContainer.on('server-ready', (port, url) => {
-                                        console.log(port, url)
-                                        setIframeUrl(url)
-                                    })
-
-                                }}
-                                className='p-2 px-4 bg-slate-300 text-white'
-                            >
-                                run
-                            </button>
-
-
-                        </div>
                     </div>
-                    <div className="bottom flex flex-grow max-w-full shrink overflow-auto">
-                        {
-                            fileTree[ currentFile ] && (
-                                <div className="code-editor-area h-full overflow-auto flex-grow bg-slate-50">
-                                    <pre
-                                        className="hljs h-full">
-                                        <code
-                                            className="hljs h-full outline-none"
-                                            contentEditable
-                                            suppressContentEditableWarning
-                                            onBlur={(e) => {
-                                                const updatedContent = e.target.innerText;
-                                                const ft = {
-                                                    ...fileTree,
-                                                    [ currentFile ]: {
-                                                        file: {
-                                                            contents: updatedContent
-                                                        }
-                                                    }
-                                                }
-                                                setFileTree(ft)
-                                                saveFileTree(ft)
-                                            }}
-                                            // dangerouslySetInnerHTML={{ __html: hljs.highlight('javascript', fileTree[ currentFile ].file.contents).value }}
-                                            style={{
-                                                whiteSpace: 'pre-wrap',
-                                                paddingBottom: '25rem',
-                                                counterSet: 'line-numbering',
-                                            }}
-                                        />
-                                    </pre>
-                                </div>
-                            )
-                        }
-                    </div>
-
                 </div>
-
-                {iframeUrl && webContainer &&
-                    (<div className="flex min-w-96 flex-col h-full">
-                        <div className="address-bar">
-                            <input type="text"
-                                onChange={(e) => setIframeUrl(e.target.value)}
-                                value={iframeUrl} className="w-full p-2 px-4 bg-slate-200" />
-                        </div>
-                        <iframe src={iframeUrl} className="w-full h-full"></iframe>
-                    </div>)
-                }
-
-
             </section>
 
             {isModalOpen && (
