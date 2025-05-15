@@ -53,10 +53,10 @@ io.on('connection', socket => {
 
     socket.on('project-message',async data=>{
       const message = data.message.trim()
-      const isAIPresentInMessage = message.includes("ai")
+      const isAIPresentInMessage = message.includes("@ai")
 
       if(isAIPresentInMessage){
-        const prompt = message.split("ai")[1].trim();
+        const prompt = message.split("@ai")[1].trim();
         const result = await getAIGeneratedContent(prompt)
 
         io.to(socket.roomId).emit('project-message',{
